@@ -1,0 +1,191 @@
+# CEDT Intern Scraping Project
+
+Web scraping และการวิเคราะห์ข้อมูลตำแหน่งฝึกงานจาก CEDT Intern System
+
+## 📋 Project Overview
+
+โปรเจคนี้ใช้สำหรับ:
+1. **Scraping ข้อมูล** - ดึงข้อมูลตำแหน่งฝึกงานจาก CEDT Intern API
+2. **ทำความสะอาดข้อมูล** - รวมและกรองข้อมูลให้พร้อมใช้งาน
+3. **เลือกตำแหน่งอัตโนมัติ** - Bookmark ตำแหน่งที่สนใจผ่าน API
+
+## 🗂️ File Structure
+
+```
+Scraping_Intern/
+├── scraping_intern_Paginated.ipynb      # Scraping แบบ pagination
+├── scraping_intern_DetailPosition.ipynb # Scraping แบบ detail position
+├── clean_data.ipynb                     # ทำความสะอาดและวิเคราะห์ข้อมูล
+├── slect_position.ipynb                 # Bookmark ตำแหน่งที่เลือก
+├── cedt_intern_data_paginated13.csv     # ข้อมูลจาก pagination
+├── cedt_intern_data_1000_2000.csv       # ข้อมูลจาก detail position
+├── cedt_intern_all_merged.csv           # ข้อมูลที่รวมและทำความสะอาดแล้ว
+├── listNamePosition.csv                 # รายการ position IDs ที่จะ bookmark
+└── .env                                 # ไฟล์เก็บ Cookie (ห้ามแชร์!)
+```
+
+## 🚀 Setup & Installation
+
+### 1. Clone Repository
+```bash
+git clone https://github.com/supakornPanya/Scraping_Intern.git
+cd Scraping_Intern
+```
+
+### 2. Install Dependencies
+```bash
+# ติดตั้ง packages ที่จำเป็น
+pip install pandas requests python-dotenv matplotlib seaborn numpy
+```
+
+หรือถ้ามี `requirements.txt`:
+```bash
+pip install -r requirements.txt
+```
+
+### 3. ตั้งค่า Environment Variables
+สร้างไฟล์ `.env` ในโฟลเดอร์โปรเจค:
+
+```env
+# .env
+COOKIE=athena_session=eyJpdiI6Imae%2FfJUly485EiN%2FyIsInZhbH...
+CEDT_COOKIE=athena_session=eyJpdiI6Imae%2FfJUly485EiN%2FyIsInZhbH...
+```
+
+**วิธีหา Cookie:**
+1. เปิด Browser (Chrome/Brave) และเข้า https://cedtintern.cp.eng.chula.ac.th
+2. Login เข้าระบบ
+3. กด `F12` → เปิด DevTools
+4. ไปที่ **Application** → **Cookies** → เลือก site
+5. คัดลอกค่า `athena_session` ทั้งหมด
+6. วางใน `.env` ไฟล์
+
+⚠️ **หมายเหตุ**: Cookie จะหมดอายุหลังจากล็อกเอาท์หรือเวลาผ่านไป หากเจอ Error 401 ให้อัพเดท Cookie ใหม่
+
+## 📖 Usage Guide
+
+### Step 1: Scraping ข้อมูล
+
+**วิธีที่ 1 - Pagination **
+```python
+# เปิด scraping_intern_Paginated.ipynb
+# Run ทุก cell ตามลำดับ
+# ข้อมูลจะถูกบันทึกใน cedt_intern_data_paginated13.csv
+```
+
+**วิธีที่ 2 - detail position**
+```python
+# เปิด scraping_intern_DetailPosition.ipynb
+# แก้ START_ID และ END_ID ตามต้องการ
+# Run ทุก cell
+# ข้อมูลจะถูกบันทึกใน cedt_intern_data_{START_ID}_{END_ID}}.csv
+```
+
+### Step 2: ทำความสะอาดข้อมูล
+
+```python
+# เปิด clean_data.ipynb
+# Run ทุก cell ตามลำดับ
+
+# สิ่งที่จะได้:
+# 1. ไฟล์ cedt_intern_all_merged.csv - ข้อมูลที่รวมและลบ duplicate แล้ว
+# 2. Statistics และกราฟวิเคราะห์
+# 3. ไฟล์ listNamePosition.csv - รายการ position IDs ที่กรองแล้ว
+```
+
+**Filter Criteria (ปรับได้ตามต้องการ):**
+```python
+mask = (df['student_draft_ratio'] < 2.0) & \
+       (df['salary_amount'] > 200.0) & (df['salary_amount'] < 500.0) & \
+       (df['work_type'] != 'Work From Home')
+```
+
+### Step 3: Bookmark ตำแหน่งอัตโนมัติ
+
+```python
+# เปิด slect_position.ipynb
+# Run ทุก cell
+# ระบบจะ bookmark ตำแหน่งทั้งหมดใน listNamePosition.csv
+```
+
+## 🔧 Configuration
+
+### ปรับค่า Scraping Parameters
+
+**scraping_intern_Paginated.ipynb:**
+```python
+START_PAGE = 1      # หน้าเริ่มต้น
+END_PAGE = 13       # หน้าสุดท้าย
+LIMIT = 20          # จำนวนรายการต่อหน้า
+```
+
+**scraping_intern_DetailPosition.ipynb:**
+```python
+START_ID = 1000     # ID เริ่มต้น
+END_ID = 2000       # ID สุดท้าย
+```
+
+### ปรับ Filter Criteria (clean_data.ipynb)
+
+```python
+# แก้ไข mask ตามเงื่อนไขที่ต้องการ
+mask = (df['student_draft_ratio'] < 2.0) & \          # อัตราส่วนนักศึกษา:ที่นั่ง < 2
+       (df['salary_amount'] > 200.0) & \              # เงินเดือนมากกว่า 200/วัน
+       (df['salary_amount'] < 500.0) & \              # เงินเดือนน้อยกว่า 500/วัน
+       (df['work_type'] != 'Work From Home')          # ไม่ใช่ WFH
+```
+
+## 📊 Data Schema
+
+**คอลัมน์สำคัญใน CSV:**
+- `id` - ID ของตำแหน่ง
+- `position_title` - ชื่อตำแหน่งงาน
+- `salary_amount` - เงินเดือน (บาท/วัน หลังจาก normalize)
+- `salary_type` - ประเภทเงินเดือน
+- `quota` - จำนวนที่รับ
+- `inStudentDraftCount` - จำนวนนักศึกษาที่สนใจ
+- `student_draft_ratio` - อัตราส่วน draft/quota
+- `work_type` - ประเภทการทำงาน (On-site, Hybrid, WFH)
+- `company_name` - ชื่อบริษัท
+- `location` - สถานที่ทำงาน
+
+## ⚠️ Important Notes
+
+1. **Cookie Expiration**: Cookie จะหมดอายุ ถ้าเจอ Error 401 ให้อัพเดท Cookie ใหม่
+2. **Rate Limiting**: มี random delay (2-5 วินาที) ระหว่าง request เพื่อไม่ให้โดน block
+3. **Data Privacy**: อย่าแชร์ไฟล์ `.env` หรือ Cookie ของคุณ
+4. **API Changes**: ถ้า API เปลี่ยน structure อาจต้องปรับโค้ด
+
+## 🐛 Troubleshooting
+
+### Error 401 Unauthorized
+```bash
+# แก้ไข: อัพเดท Cookie ใน .env ไฟล์
+# Cookie หมดอายุทุกครั้งที่ล็อกเอาท์
+```
+
+### ไม่มีข้อมูลใน CSV
+```bash
+# ตรวจสอบ:
+# 1. Cookie ยังใช้งานได้หรือไม่
+# 2. START_PAGE/START_ID ถูกต้องหรือไม่
+# 3. Internet connection
+```
+
+### ImportError
+```bash
+# ติดตั้ง package ที่ขาดหาย
+pip install [package_name]
+```
+
+## 📝 License
+
+This project is for educational purposes only.
+
+## 👤 Author
+
+**supakornPanya**
+- GitHub: [@supakornPanya](https://github.com/supakornPanya)
+
+---
+**Happy Scraping! 🚀**
