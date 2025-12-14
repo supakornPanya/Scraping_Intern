@@ -70,7 +70,7 @@ def scraping_Detail(Start_ID=1000, End_ID=2000, Output_Filename="cedt_intern_dat
             if len(temp_log) >= 10:
                 log_entry = ''
                 for log_i in temp_log:
-                    log_entry += log_i + " "
+                    log_entry += log_i + ", "
                 st.write(log_entry)
                 print(log_entry)
                 temp_log = []

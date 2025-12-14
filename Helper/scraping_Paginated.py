@@ -82,12 +82,12 @@ def scraping_Paginated(Start_Page=1, End_Page=16, Limit=20, Output_Filename="ced
                 temp_log.append(f"[ERR] Page {page}: Status {response.status_code}")
 
             # แสดงความคืบหน้า
-            progress_bar.progress((idx + 1) / (End_ID - Start_ID + 1))
+            progress_bar.progress((idx + 1) / (END_PAGE - START_PAGE + 1))
             idx += 1
             if len(temp_log) >= 5:
                 log_entry = ''
                 for log_i in temp_log:
-                    log_entry += log_i + " "    
+                    log_entry += log_i + ", "    
                 st.write(log_entry)
                 print(log_entry)
                 temp_log = []
