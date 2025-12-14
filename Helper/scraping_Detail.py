@@ -23,6 +23,9 @@ def scraping_Detail(Start_ID=1000, End_ID=2000, Output_Filename="cedt_intern_dat
     # 2. เริ่มการวนลูป (Scraping Loop)
     # ==========================================
     print(f"Starting scrape from ID {Start_ID} to {End_ID}...")
+    progress_bar = st.progress(0)
+    idx = 0
+    
     for job_id in range(Start_ID, End_ID + 1):
         url = API_URL_TEMPLATE.format(job_id)
         
@@ -54,13 +57,16 @@ def scraping_Detail(Start_ID=1000, End_ID=2000, Output_Filename="cedt_intern_dat
                 
                 all_job_data.append(job_info)
                 temp_log.append(f"[OK] ID {job_id}: Found '{job_info['position_title']}'")
-
+            
             # กรณีไม่เจอข้อมูล (404) หรือไม่มีสิทธิ์ (403)
             elif response.status_code == 404:
                 temp_log.append(f"[SKIP] ID {job_id}: Not Found")
             else:
                 temp_log.append(f"[ERR] ID {job_id}: Status {response.status_code}")
 
+            # แสดงความคืบหน้า
+            progress_bar.progress((idx + 1) / (End_ID - Start_ID + 1))
+            idx += 1
             if len(temp_log) >= 10:
                 log_entry = ''
                 for log_i in temp_log:

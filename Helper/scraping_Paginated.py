@@ -36,6 +36,8 @@ def scraping_Paginated(Start_Page=1, End_Page=16, Limit=20, Output_Filename="ced
     # ==========================================
     print(f"Starting scraping pages {START_PAGE} to {END_PAGE}...")
     st.write(f"Starting scraping pages {START_PAGE} to {END_PAGE}...")
+    idx = 0
+    progress_bar = st.progress(0)
 
     for page in range(START_PAGE, END_PAGE + 1):
         # สร้าง URL โดยใส่เลขหน้าและ limit
@@ -79,6 +81,9 @@ def scraping_Paginated(Start_Page=1, End_Page=16, Limit=20, Output_Filename="ced
             else:
                 temp_log.append(f"[ERR] Page {page}: Status {response.status_code}")
 
+            # แสดงความคืบหน้า
+            progress_bar.progress((idx + 1) / (End_ID - Start_ID + 1))
+            idx += 1
             if len(temp_log) >= 5:
                 log_entry = ''
                 for log_i in temp_log:
