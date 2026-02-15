@@ -3,7 +3,6 @@ import requests
 import pandas as pd
 import time
 import random
-import os
 import streamlit as st
 
 def scraping_Paginated(Start_Page=1, End_Page=16, Limit=20, Output_Filename="cedt_intern_data_paginated.csv", cookie_value=None):

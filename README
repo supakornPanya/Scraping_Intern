@@ -61,7 +61,6 @@ POST /api/sessions/5/openings/{id}/bookmark        (Bookmark)
 
 | Issue | Fix |
 |-------|-----|
-| Cookie error | Update `.env` with fresh token from login |
 | No CSV files | Run scraping in Tab 1 first |
 | Slow scraping | Reduce page/ID range |
 
