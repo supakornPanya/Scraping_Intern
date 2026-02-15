@@ -9,7 +9,6 @@ Web scraping + data analysis app for finding internship positions.
 git clone https://github.com/supakornPanya/Scraping_Intern.git
 cd Scraping_Intern
 pip install -r requirements.txt
-echo "COOKIE=athena_session=YOUR_COOKIE_VALUE" > .env
 ```
 
 ## 📖 Usage (3 Tabs)
