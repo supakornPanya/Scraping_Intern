@@ -5,7 +5,7 @@ import time
 import random
 import streamlit as st
 
-def scraping_Paginated(Start_Page=1, End_Page=16, Limit=20, Output_Filename="cedt_intern_data_paginated.csv", cookie_value=None):
+def scraping_Paginated(Start_Page=1, End_Page=1000, Limit=1000, Output_Filename="cedt_intern_data_paginated.csv", cookie_value=None):
     print(f"Cookie loaded: {cookie_value[:50]}..." if cookie_value else "Cookie is None!")
     if not cookie_value:
         raise ValueError("COOKIE not found in .env file!")
